@@ -190,7 +190,8 @@ class WebkitLoad (Foundation.NSObject, WebKit.protocols.WebFrameLoadDelegate):
             bounds.size.width = self.options.UNSAFE_max_width
 
         view.window().display()
-        view.window().setContentSize_(Foundation.NSSize(bounds.size.width, self.options.initHeight))
+        view.window().setContentSize_(
+            Foundation.NSSize(self.options.initWidth, self.options.initHeight))
         view.setFrame_(bounds)
 
         if hasattr(view, "bitmapImageRepForCachingDisplayInRect_"):
@@ -250,9 +251,9 @@ class WebkitLoad (Foundation.NSObject, WebKit.protocols.WebFrameLoadDelegate):
 
                 zoom = self.options.zoom
 
-                cropRect = Foundation.NSMakeRect(
-                        zoom * left, zoom * top,
-                        zoom * el.offsetWidth(), zoom * el.offsetHeight())
+            cropRect = view.window().convertRectToBacking_(Foundation.NSMakeRect(
+                zoom * left, zoom * top,
+                zoom * el.offsetWidth(), zoom * el.offsetHeight()))
 
                 cropped = Quartz.CGImageCreateWithImageInRect(
                         bitmapdata.CGImage(), cropRect)
